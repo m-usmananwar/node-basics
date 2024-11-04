@@ -1,4 +1,5 @@
 const postService = require("../services/postService");
+const responseHelper = require('../helpers/responseHelper');
 
 const createPost = async (req, res) => {
     try {
@@ -7,27 +8,27 @@ const createPost = async (req, res) => {
 
         const post = await postService.createPost(reqBody);
 
-        res.status(201).json(post);
+        responseHelper.success(res, post);
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        responseHelper.error(res, error.message, 400);
     }
 };
 
 const getAllPosts = async (req, res) => {
     try {
         const posts = await postService.getAllPosts();
-        res.status(200).json(posts);
+        responseHelper.success(res, posts);
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        responseHelper.error(res, error.message, 400);
     }
 }
 
 const getAllPostsByUserId = async (req, res) => {
     try {
         const posts = await postService.getAllPostsByUserId(req.user.id);
-        res.status(200).json(posts);
+        responseHelper.success(res, posts);
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        responseHelper.error(res, error.message, 400);
     }
 };
 

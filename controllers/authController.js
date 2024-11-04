@@ -1,11 +1,13 @@
 const authService = require("../services/authService");
+const responseHelper = require('../helpers/responseHelper');
 
 const register = async (req, res) => {
     try {
         const user = await authService.register(req.body);
+        responseHelper.success(res, user, "User created successfully", 201);
         res.status(201).json(user);
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        responseHelper.error(res, error.message, 400);
     }
 };
 
@@ -13,9 +15,9 @@ const register = async (req, res) => {
 const login = async (req, res) => {
     try {
         const user = await authService.login(req.body);
-        res.status(200).json(user);
+        responseHelper.success(res, user, "User authenticated successfully", 200);
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        responseHelper.error(res, error.message, 400);
     }
 };
 
