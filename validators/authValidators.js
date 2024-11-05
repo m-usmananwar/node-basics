@@ -1,23 +1,29 @@
 const { body, validationResult } = require('express-validator');
-const User = require('../models/User');
 const responseHelper = require('../helpers/responseHelper');
+const authRepository = require('../repositories/authRepository');
 
 const registerValidationRules = () => [
     body('username')
         .notEmpty()
         .withMessage('Username is required')
         .custom(async(value) => {
-            const user = await User.findOne({ username: value });
+            const user = await authRepository.isUserExistsWithUsername(value);
             if (user) {
                 throw new Error('Username already exists');
             }
             return true;
         }),
+    body('firstName')
+        .notEmpty()
+        .withMessage('First name is required'),
+    body('lastName')
+        .notEmpty()
+        .withMessage('Last name is required'),
     body('email')
         .isEmail()
         .withMessage('Valid email is required')
         .custom(async(value) => {
-            const user = await User.findOne({ email: value });
+            const user = await authRepository.isUserExistsWithEmail(value);
             if (user) {
                 throw new Error('Email already exists');
             }
@@ -33,15 +39,34 @@ const loginValidationRules = () => [
         .isEmail()
         .withMessage('Valid email is required')
         .custom(async(value) => {
-            const user = await User.findOne({ email: value });
+            const user = await authRepository.isUserExistsWithEmail(value);
             if (!user) {
                 throw new Error('No user found with this email');
+            }
+            if(user.emailVerifiedAt === null) {
+                throw new Error('Email is not verified');
             }
             return true;
         }),
     body('password')
         .isLength({ min: 8 })
         .withMessage('Password must be at least 6 characters'),
+];
+
+const verificationValidationRules = () => [
+    body('email')
+        .isEmail()
+        .withMessage('Valid email is required')
+        .custom(async (value) => {
+            const user = await authRepository.isUserExistsWithEmail(value);
+            if (!user) {
+                throw new Error('No user found with this email');
+            }
+            return true;
+        }),
+    body('verificationCode')
+        .notEmpty()
+        .withMessage('Verification code is required'),
 ];
 
 const validate = (req, res, next) => {
@@ -55,5 +80,6 @@ const validate = (req, res, next) => {
 module.exports = {
     registerValidationRules,
     loginValidationRules,
+    verificationValidationRules,
     validate,
 };

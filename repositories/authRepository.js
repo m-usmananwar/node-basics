@@ -22,4 +22,31 @@ const register = async (data) => {
     }
 }
 
-module.exports = { login, register };
+const isUserExistsWithEmail = async (email) => {
+    try {
+        const user = await User.findOne({ email });
+        return !!user;
+    } catch (error) {
+        throw new Error(error.message);
+    }
+}
+
+const isUserExistsWithUsername = async (username) => {
+    try {
+        const user = await User.findOne({ username });
+        return !!user;
+    } catch (error) {
+        throw new Error(error.message);
+    }
+}
+
+const getUserNByEmail = async (email) => {
+    try {
+        const user = await User.findOne({ email });
+        return user;
+    } catch (error) {
+        throw new Error(error.message);
+    }
+}
+
+module.exports = { login, register, isUserExistsWithEmail, isUserExistsWithUsername, getUserNByEmail };
