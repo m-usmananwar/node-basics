@@ -5,13 +5,13 @@ const createPost = async (data) => {
     return post;
 };
 
-const getAllPosts = async () => {
-    const posts = await postRepository.getAllPosts();
+const getAllPosts = async (paginationData) => {
+    const posts = await postRepository.getAllPosts(paginationData);
     return posts;
 };
 
-const getAllPostsByUserId = async (userId) => {
-    const posts = await postRepository.getAllPostsByUserId(userId);
+const getAllPostsByUserId = async (userId, paginationData) => {
+    const posts = await postRepository.getAllPostsByUserId(userId, paginationData);
     return posts;
 };
 

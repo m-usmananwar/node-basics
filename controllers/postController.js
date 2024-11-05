@@ -1,5 +1,6 @@
 const postService = require("../services/postService");
-const responseHelper = require('../helpers/responseHelper');
+const { successResponse, errorResponse } = require('../helpers/responseHelper');
+const { getPaginationData } = require('../helpers/paginationHelper');
 
 const createPost = async (req, res) => {
     try {
@@ -8,27 +9,31 @@ const createPost = async (req, res) => {
 
         const post = await postService.createPost(reqBody);
 
-        responseHelper.success(res, post);
+        successResponse(res, post);
     } catch (error) {
-        responseHelper.error(res, error.message, 400);
+        errorResponse(res, error.message, 400);
     }
 };
 
 const getAllPosts = async (req, res) => {
     try {
-        const posts = await postService.getAllPosts();
-        responseHelper.success(res, posts);
+        const paginationData = getPaginationData(req);
+
+        const posts = await postService.getAllPosts(paginationData);
+        successResponse(res, posts);
     } catch (error) {
-        responseHelper.error(res, error.message, 400);
+        errorResponse(res, error.message, 400);
     }
 }
 
 const getAllPostsByUserId = async (req, res) => {
     try {
-        const posts = await postService.getAllPostsByUserId(req.user.id);
-        responseHelper.success(res, posts);
+        const paginationData = getPaginationData(req);
+
+        const posts = await postService.getAllPostsByUserId(req.user.id, paginationData);
+        successResponse(res, posts);
     } catch (error) {
-        responseHelper.error(res, error.message, 400);
+        errorResponse(res, error.message, 400);
     }
 };
 
