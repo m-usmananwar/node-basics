@@ -1,5 +1,5 @@
 const { body, validationResult } = require('express-validator');
-const responseHelper = require('../helpers/responseHelper');
+const { errorResponse } = require('../helpers/responseHelper');
 const authRepository = require('../repositories/authRepository');
 
 const registerValidationRules = () => [
@@ -62,6 +62,9 @@ const verificationValidationRules = () => [
             if (!user) {
                 throw new Error('No user found with this email');
             }
+            if(user.emailVerifiedAt !== null) {
+                throw new Error('Email is already verified');
+            }
             return true;
         }),
     body('verificationCode')
@@ -72,7 +75,7 @@ const verificationValidationRules = () => [
 const validate = (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return responseHelper.error(res, errors.array().map(err => err.msg), 400);
+        return errorResponse(res, errors.array().map(err => err.msg), 400);
     }
     next();
 };
