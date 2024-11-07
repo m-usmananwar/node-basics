@@ -45,4 +45,9 @@ const getAllPostsByUserId = async (userId, paginationData) => {
     });
 };
 
-module.exports = { createPost, getAllPosts, getAllPostsByUserId };
+const getPostById = async (id) => {
+    const post = await Post.findById(id);
+    return post;
+};
+
+module.exports = { createPost, getAllPosts, getAllPostsByUserId, getPostById };
