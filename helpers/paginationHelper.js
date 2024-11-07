@@ -4,9 +4,9 @@ const getPaginationData = (req) => {
     const filters = req.query.filters || {};
 
     return {
-             page, 
-             limit, 
-             filters 
+        page,
+        limit,
+        filters
     };
 }
 
