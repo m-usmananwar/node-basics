@@ -2,6 +2,15 @@ const postService = require("../services/postService");
 const { successResponse, errorResponse } = require('../helpers/responseHelper');
 const { getPaginationData } = require('../helpers/paginationHelper');
 
+const getPost = async (req, res) => {
+    try {
+        const data = req.query;
+        const post = await postService.getPost(req.params.id, data);
+        successResponse(res, post);
+    } catch (error) {
+        errorResponse(res, error.message, 400);
+    }
+}
 const createPost = async (req, res) => {
     try {
         const reqBody = req.body;
@@ -37,4 +46,4 @@ const getAllPostsByUserId = async (req, res) => {
     }
 };
 
-module.exports = { createPost, getAllPosts, getAllPostsByUserId };
+module.exports = { createPost, getAllPosts, getAllPostsByUserId, getPost };

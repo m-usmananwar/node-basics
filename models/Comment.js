@@ -24,6 +24,13 @@ const commentSchema = new mongoose.Schema({
     timestamps: true,
 });
 
+commentSchema.virtual('replies', {
+    ref: 'Comment',
+    localField: '_id',
+    foreignField: 'parentId',
+    justOne: false,
+});
+
 commentSchema.set('toJSON', {
     transform: (doc, ret) => {
         return {

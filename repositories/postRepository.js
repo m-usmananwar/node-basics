@@ -15,9 +15,9 @@ const getAllPosts = async (paginationData) => {
     const [results, total] = await Promise.all([
         Post.find(query).skip(skip).limit(paginationData.limit),
         Post.countDocuments(query),
-      ]);
-  
-      return buildPaginatedResponse({
+    ]);
+
+    return buildPaginatedResponse({
         page: paginationData.page,
         limit: paginationData.limit,
         total,
@@ -34,9 +34,9 @@ const getAllPostsByUserId = async (userId, paginationData) => {
     const [results, total] = await Promise.all([
         Post.find(query).skip(skip).limit(paginationData.limit),
         Post.countDocuments(query),
-      ]);
-  
-      return buildPaginatedResponse({
+    ]);
+
+    return buildPaginatedResponse({
         page: paginationData.page,
         limit: paginationData.limit,
         total,
@@ -45,8 +45,27 @@ const getAllPostsByUserId = async (userId, paginationData) => {
     });
 };
 
-const getPostById = async (id) => {
-    const post = await Post.findById(id);
+const getPostById = async (id, loadComments = false) => {
+    const query = Post.findById(id);
+
+    query.select('title description createdAt updatedAt');
+
+    if (loadComments) {
+        query.populate({
+            path: 'comments',
+            match: { parentId: null },
+            options: { sort: { createdAt: -1 } },
+            select: 'content createdAt userId',
+            populate: {
+                path: 'replies',
+                options: { sort: { createdAt: -1 } },
+                select: 'content createdAt userId',
+            },
+        });
+    }
+
+    const post = await query.lean().exec();
+
     return post;
 };
 

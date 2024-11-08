@@ -1,5 +1,9 @@
 const postRepository = require('../repositories/postRepository');
 
+const getPost = async (id, data) => {
+    const post = await postRepository.getPostById(id, data.loadComments ?? false);
+    return post;
+}
 const createPost = async (data) => {
     const post = await postRepository.createPost(data);
     return post;
@@ -15,4 +19,4 @@ const getAllPostsByUserId = async (userId, paginationData) => {
     return posts;
 };
 
-module.exports = { createPost, getAllPosts, getAllPostsByUserId }
+module.exports = { createPost, getAllPosts, getAllPostsByUserId, getPost }

@@ -18,6 +18,13 @@ const postSchema = new mongoose.Schema({
     timestamps: true,
 });
 
+postSchema.virtual('comments', {
+    ref: 'Comment',
+    localField: '_id',
+    foreignField: 'postId',
+    justOne: false,
+});
+
 postSchema.set('toJSON', {
     transform: (doc, ret) => {
         return {
