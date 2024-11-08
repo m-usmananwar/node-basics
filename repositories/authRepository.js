@@ -40,7 +40,7 @@ const isUserExistsWithUsername = async (username) => {
     }
 }
 
-const getUserNByEmail = async (email) => {
+const getUserByEmail = async (email) => {
     try {
         const user = await User.findOne({ email });
         return user;
@@ -49,4 +49,4 @@ const getUserNByEmail = async (email) => {
     }
 }
 
-module.exports = { login, register, isUserExistsWithEmail, isUserExistsWithUsername, getUserNByEmail };
+module.exports = { login, register, isUserExistsWithEmail, isUserExistsWithUsername, getUserByEmail };

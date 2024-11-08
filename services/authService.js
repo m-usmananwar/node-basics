@@ -26,7 +26,7 @@ const login = async (data) => {
 };
 
 const verifyAccount = async (data) => {
-    const user = await authRepository.getUserNByEmail(data.email);
+    const user = await authRepository.getUserByEmail(data.email);
     if(!user) {
         throw new Error('User not found');
     }
